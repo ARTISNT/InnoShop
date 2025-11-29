@@ -1,30 +1,21 @@
-using Microsoft.EntityFrameworkCore;
-using UsersManagement.Application.Abstractions.Repositories;
-using UsersManagement.Application.Dto.UserDto;
-using UsersManagement.Application.Implementation.Queries;
-using UsersManagement.Infrastructure.Db.Context;
-using UsersManagement.Infrastructure.Repositories;
+
+using UsersManagement.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<UsersManagementDbContext>(dbContextOptions => 
-    dbContextOptions.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetAllUsersQuery).Assembly));
-builder.Services.AddAutoMapper(cfg => { }, typeof(UserDtoResponse).Assembly);
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddAuthServices(builder.Configuration);
+builder.Services.AddCustomEmailServices(builder.Configuration);
+builder.Services.AddCustomApplicationServices();
+builder.Services.AddApiConfiguration();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

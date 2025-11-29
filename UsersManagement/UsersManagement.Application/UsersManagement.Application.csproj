@@ -12,13 +12,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Implementation\Commands\" />
-      <Folder Include="Implementation\Handlers\Commands\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="AutoMapper" Version="15.1.0" />
+      <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
       <PackageReference Include="MediatR" Version="13.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.11" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     </ItemGroup>
 
 </Project>

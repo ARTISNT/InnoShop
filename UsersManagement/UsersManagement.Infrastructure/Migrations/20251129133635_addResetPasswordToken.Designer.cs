@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UsersManagement.Infrastructure.Db.Context;
 
@@ -11,9 +12,11 @@ using UsersManagement.Infrastructure.Db.Context;
 namespace UsersManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersManagementDbContext))]
-    partial class UsersManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251129133635_addResetPasswordToken")]
+    partial class addResetPasswordToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,48 +37,14 @@ namespace UsersManagement.Infrastructure.Migrations
                     b.Property<DateTime>("ExpiresOnUts")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserEntityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserEntityId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("EmailVerificationTokens");
-                });
-
-            modelBuilder.Entity("UsersManagement.Domain.Models.Entities.ResetPasswordToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiresOnUts")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Used")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ResetPasswordTokens");
                 });
 
             modelBuilder.Entity("UsersManagement.Domain.Models.Entities.UserEntity", b =>
@@ -116,10 +85,6 @@ namespace UsersManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("UsersManagement.Domain.Models.Entities.EmailVerificationToken", b =>
                 {
-                    b.HasOne("UsersManagement.Domain.Models.Entities.UserEntity", null)
-                        .WithMany("EmailVerificationTokens")
-                        .HasForeignKey("UserEntityId");
-
                     b.HasOne("UsersManagement.Domain.Models.Entities.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -127,24 +92,6 @@ namespace UsersManagement.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("UsersManagement.Domain.Models.Entities.ResetPasswordToken", b =>
-                {
-                    b.HasOne("UsersManagement.Domain.Models.Entities.UserEntity", "User")
-                        .WithMany("ResetPasswordTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("UsersManagement.Domain.Models.Entities.UserEntity", b =>
-                {
-                    b.Navigation("EmailVerificationTokens");
-
-                    b.Navigation("ResetPasswordTokens");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,7 +9,11 @@ public class UserEntity
 
     public UserRole Role { get; private set; } = UserRole.Seller;
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
-    public bool IsDeleted { get; private set; } =  false;
+    public bool IsActive { get; private set; } =  true;
+    public bool EmailVerified { get; private set; } = false;
+    
+    public ICollection<ResetPasswordToken> ResetPasswordTokens { get; set; }
+    public ICollection<EmailVerificationToken> EmailVerificationTokens { get; set; }
 
     private UserEntity() {} 
 
@@ -17,9 +21,14 @@ public class UserEntity
     {
         SetUsername(username);
         SetEmail(email);
-        SetPassword(passwordHash);
+        SetPasswordHash(passwordHash);
     }
+    
+    public void VerifyEmail() => EmailVerified = true;
 
+    public void Deactivate() => IsActive = false;
+    public void Activate() => IsActive = true;
+    
     public void SetUsername(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -36,10 +45,10 @@ public class UserEntity
         Email = value;
     }
 
-    public void SetPassword(string value)
+    public void SetPasswordHash(string value)
     {
-        if (value.Length < 20)
-            throw new ArgumentException("Password hash too short.");
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("Password hash cannot be null.");
         PasswordHash = value;
     }
 }
