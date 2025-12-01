@@ -26,6 +26,7 @@ public class JwtProvider(IOptions<AuthSettings> options, IUserRepository userRep
         };
 
         var jwtToken = new JwtSecurityToken(
+            issuer: options.Value.Issuer,
             expires: DateTime.UtcNow.Add(options.Value.TokenLifetime),
             claims: claims,
             signingCredentials: new SigningCredentials(

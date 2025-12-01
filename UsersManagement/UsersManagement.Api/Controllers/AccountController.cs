@@ -17,6 +17,7 @@ public class AccountController(ISender sender) : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser([FromBody]RegisterUserDto user)
     {
+        Console.WriteLine(Guid.Parse("6dd38479-a5bf-44e5-11e6-08de2f91eedf"));
         await sender.Send(new RegisterUserCommand(user));
         return Ok();
     }
